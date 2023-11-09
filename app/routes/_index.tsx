@@ -1,3 +1,6 @@
+import { json } from "@netlify/remix-runtime";
+import { useLoaderData } from "@remix-run/react";
+
 export function headers({
   loaderHeaders,
   parentHeaders,
@@ -5,17 +8,21 @@ export function headers({
   loaderHeaders: Headers;
   parentHeaders: Headers;
 }) {
-  console.log(
-    "This is an example of how to set caching headers for a route, feel free to change the value of 60 seconds or remove the header"
-  );
   return {
     // This is an example of how to set caching headers for a route
     // For more info on headers in Remix, see: https://remix.run/docs/en/v1/route/headers
-    "Cache-Control": "public, max-age=60, s-maxage=60",
+    "Cache-Control": "public, s-maxage=60",
   };
 }
 
+export const loader = async () => {
+  console.log("loader calling");
+  return json({ date: new Date() });
+};
+
 export default function Index() {
+  const data = useLoaderData();
+  console.log(data);
   return (
     <main style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix</h1>
@@ -26,9 +33,10 @@ export default function Index() {
             href="https://remix.run/tutorials/blog"
             rel="noreferrer noopener"
           >
-            15m Quickstart Blog Tutorial
+            15m Quickstart Blog Tutorial Hello
           </a>
         </li>
+        <h1 className="text-6xl">Time is {new Date().toTimeString()}</h1>
         <li>
           <a
             target="_blank"
